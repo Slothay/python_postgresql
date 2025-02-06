@@ -31,10 +31,17 @@ def update_values():
     update_script = 'UPDATE employee SET salary = salary + (salary*0.5)'
     cur.execute(update_script)
 
-def delete_record():
-    delete_script = 'DELETE FROM employee WHERE name = %s'
-    delete_record = ('James',)
-    cur.execute(delete_script, delete_record)
+def delete_record(delete_r):
+    i = 0
+    cur.execute('SELECT * FROM employee')
+    for record in cur.fetchall():
+        if record['name'] == delete_r:
+            i += 1
+            delete_script = 'DELETE FROM employee WHERE name = %s'
+            delete_record = (delete_r,)
+            cur.execute(delete_script, delete_record)
+    if i == 0:
+        print("There is no such employee name in the records.")
 
 def print_table():
     cur.execute('SELECT * FROM employee')
@@ -71,8 +78,8 @@ try:
                     elif answer == "1":
                         print_table()
                     elif answer == "5":
-                        delete_record()
-                        print("Record deleted.")
+                        to_delete = input("Which employee record would you like to delete?:")
+                        delete_record(to_delete)
                 except ValueError:
                     print("Please choose valid option.")
 
